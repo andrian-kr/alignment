@@ -9,12 +9,13 @@ from tqdm import tqdm
 
 
 class AyaSuiteEvaluator(BaseEvaluator):
-    def __init__(self, model: BaseModel):
+    def __init__(self, model: BaseModel, bert_score_model_type: str = "xlm-roberta-large"):
         super().__init__(dataset_name="aya_eval_ukr", model=model)
         self.bert_score = load("bertscore")
+        self.bert_score_model_type = bert_score_model_type
 
     def run_evaluation(self):
-        run_name = f"{self.model.model_id}_{self.dataset_name}_{datetime.now().strftime('%Y-%m-%dT%H:%M:%S')}"
+        run_name = f"{self.model.model_id}_{self.dataset_name}_{self.bert_score_model_type}_{datetime.now().strftime('%Y-%m-%dT%H:%M:%S')}"
         for item in tqdm(self.dataset.items, desc="Evaluation progress"):
             with item.observe(run_name=run_name) as trace_id:
                 query = item.input["query"]
@@ -41,9 +42,13 @@ class AyaSuiteEvaluator(BaseEvaluator):
 
     def log_score(self, prediction: str, expected_output: str, trace_id: str):
         bert_scores = self.bert_score.compute(
-            predictions=[prediction], references=[expected_output], lang="uk", model_type="xlm-roberta-large"
+            predictions=[prediction], references=[expected_output], lang="uk", model_type=self.bert_score_model_type
         )
-        main_language = detect(prediction)
+        try:
+            main_language = detect(prediction)
+        except Exception as e:
+            main_language = str(e)
+
         self.langfuse_client.score(trace_id=trace_id, name="bert_percision", value=bert_scores["precision"][0])
         self.langfuse_client.score(trace_id=trace_id, name="bert_recall", value=bert_scores["recall"][0])
         self.langfuse_client.score(trace_id=trace_id, name="bert_f1", value=bert_scores["f1"][0])

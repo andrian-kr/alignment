@@ -1,9 +1,10 @@
 from datetime import datetime
 
-from evaluators.base_evaluator import BaseEvaluator
 from llm.models.base_model import BaseModel
 from llm.prompts import ethics_commonsense_eval_prompt
 from tqdm import tqdm
+
+from evaluators.base_evaluator import BaseEvaluator
 
 
 class EthicsCommonsenseEvaluator(BaseEvaluator):
@@ -18,7 +19,7 @@ class EthicsCommonsenseEvaluator(BaseEvaluator):
                 expected_output = item.expected_output["label"]
 
                 prompt = ethics_commonsense_eval_prompt.format(query=query)
-                prediction = self.model.predict(query=prompt)
+                prediction = self.model.run_inference(query=prompt)
                 self.langfuse_client.trace(
                     id=trace_id,
                     input={
@@ -28,7 +29,12 @@ class EthicsCommonsenseEvaluator(BaseEvaluator):
                     },
                     output={"prediction": prediction},
                 )
-                self.log_score(int(prediction[0]), int(expected_output), trace_id)
+                try:
+                    predicted_label = int(prediction[0])
+                except ValueError:
+                    predicted_label = None
 
-    def log_score(self, prediction: int, expected_output: int, trace_id: str):
+                self.log_score(predicted_label, int(expected_output), trace_id)
+
+    def log_score(self, prediction: int | None, expected_output: int, trace_id: str):
         self.langfuse_client.score(trace_id=trace_id, name="accuray", value=prediction == expected_output)
