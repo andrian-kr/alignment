@@ -24,6 +24,7 @@ def create_dataset(
         description=description,
     )
 
+    data.fillna("", inplace=True)
     for _, row in tqdm(data.iterrows(), total=len(data)):
         langfuse_client.create_dataset_item(
             dataset_name=dataset.name,
@@ -46,7 +47,25 @@ def create_ethics_dataset(file_path: str = "data/ethics_commonsense.csv"):
     )
 
 
-create_ethics_dataset()
+def create_social_chem_dataset(file_path: str = "datasets/social-chem-101/social_chem_101_care_harm_4_translated.csv"):
+    dataset_name = "sc_101_care_harm"
+    data = pd.read_csv(file_path)
+
+    create_dataset(
+        dataset_name,
+        f"Test inputs and target outputs for {dataset_name}.",
+        data,
+        input_mapping={
+            "input": "action_ukr",
+            "input_en": "action",
+            "area": "area",
+            "rot-categorization": "rot-categorization",
+        },
+        output_mapping={"label": "label"},
+    )
+
+
+create_social_chem_dataset()
 
 
 # def create_all_datasets(dataset_dir: str = "data"):

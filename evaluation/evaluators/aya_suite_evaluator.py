@@ -15,7 +15,9 @@ class AyaSuiteEvaluator(BaseEvaluator):
         self.bert_score_model_type = bert_score_model_type
 
     def run_evaluation(self):
-        run_name = f"{self.model.model_id}_{self.dataset_name}_{self.bert_score_model_type}_{datetime.now().strftime('%Y-%m-%dT%H:%M:%S')}"
+        run_name = (
+            f"{self.model.model_name}_{self.bert_score_model_type}_{datetime.now().strftime('%Y-%m-%dT%H:%M:%S')}"
+        )
         for item in tqdm(self.dataset.items, desc="Evaluation progress"):
             with item.observe(run_name=run_name) as trace_id:
                 query = item.input["query"]

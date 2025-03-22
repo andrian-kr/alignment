@@ -1,12 +1,28 @@
+import gc
+
+import torch
+from core.logger import general_logger
 from dotenv import load_dotenv
-from evaluators.ethics_evaluator import EthicsCommonsenseEvaluator
+from evaluators.sc_101_evaluator import SocialChem101Evaluator
+from llm.models.aya_expanse import AyaExpanse
 from llm.models.gemma import Gemma
+from llm.models.llama import Llama
+from llm.models.qwen import Qwen
 from utils.common import login_to_hf
 
 load_dotenv()
 
 login_to_hf()
 
-gemma_model = Gemma()
-ethics_evaluator = EthicsCommonsenseEvaluator(model=gemma_model)
-ethics_evaluator.run_evaluation()
+model_classes = [AyaExpanse, Llama, Gemma, Qwen]
+for model_class in model_classes:
+    model = model_class()
+    general_logger.info(f"Running evaluation for model: {model.model_id}")
+    evaluator = SocialChem101Evaluator(model=model)
+    evaluator.run_evaluation(english_eval=True)
+
+    del evaluator
+    del model
+
+    torch.cuda.empty_cache()
+    gc.collect()

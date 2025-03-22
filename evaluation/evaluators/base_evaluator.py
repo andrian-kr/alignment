@@ -10,7 +10,7 @@ class BaseEvaluator:
         self.langfuse_client = Langfuse()
         self.dataset = self.langfuse_client.get_dataset(self.dataset_name)
 
-    def run_evaluation(self):
+    def run_evaluation(self, **kwargs):
         """
         Run evaluation on the dataset
         """
