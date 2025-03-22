@@ -18,8 +18,8 @@ model_classes = [AyaExpanse, Llama, Gemma, Qwen]
 for model_class in model_classes:
     model = model_class()
     general_logger.info(f"Running evaluation for model: {model.model_id}")
-    evaluator = SocialChem101Evaluator(model=model)
-    evaluator.run_evaluation(english_eval=True)
+    evaluator = SocialChem101Evaluator(dataset_name="sc_101_care_harm_deepl", model=model)
+    evaluator.run_evaluation()
 
     del evaluator
     del model

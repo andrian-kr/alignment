@@ -8,8 +8,8 @@ from evaluators.base_evaluator import BaseEvaluator
 
 
 class SocialChem101Evaluator(BaseEvaluator):
-    def __init__(self, model: BaseModel):
-        super().__init__(dataset_name="sc_101_care_harm", model=model)
+    def __init__(self, model: BaseModel, dataset_name: str = "sc_101_care_harm"):
+        super().__init__(dataset_name=dataset_name, model=model)
 
     def run_evaluation(self, english_eval: bool = False):
         run_name = f"{self.model.model_name}_{datetime.now().strftime('%Y-%m-%dT%H:%M:%S')}"
