@@ -5,6 +5,7 @@ from core.logger import llm_logger
 class BaseModel(ABC):
     def __init__(self, model_id, logger=llm_logger):
         self.model_id = model_id
+        self.model_name = self.model_id.split("/")[-1]
         self.logger = logger
         self.model, self.tokenizer = self.init_model()
 

@@ -39,5 +39,5 @@ class AyaExpanse(BaseModel):
             )
         prompt_padded_len = len(input_ids[0])
         gen_tokens = gen_tokens[0][prompt_padded_len:]
-        gen_text = self.tokenizer.decode(gen_tokens, skip_special_tokents=True)
+        gen_text = self.tokenizer.decode(gen_tokens, skip_special_tokens=True)
         return gen_text.strip()
