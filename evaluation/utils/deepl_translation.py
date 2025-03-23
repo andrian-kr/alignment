@@ -22,9 +22,17 @@ def traslate_csv(
     df.to_csv(ouput_file_path, index=False)
 
 
+# Social Chem 101
+# traslate_csv(
+#     file_path="/Users/akravche/Projects/UCU/alignment/evaluation/datasets/social-chem-101/social-chem-101_care-harm_rot-agree_4.csv",
+#     source_column="action",
+#     target_column="action_ukr",
+#     ouput_file_path="/Users/akravche/Projects/UCU/alignment/evaluation/datasets/social-chem-101/social-chem-101_care-harm_4_deepl_translated.csv",
+# )
+
 traslate_csv(
-    file_path="/Users/akravche/Projects/UCU/alignment/evaluation/datasets/social-chem-101/social-chem-101_care-harm_rot-agree_4.csv",
-    source_column="action",
-    target_column="action_ukr",
-    ouput_file_path="/Users/akravche/Projects/UCU/alignment/evaluation/datasets/social-chem-101/social-chem-101_care-harm_4_deepl_translated.csv",
+    file_path="/Users/akravche/Projects/UCU/alignment/evaluation/datasets/ethics/ethics_commonsense.csv",
+    source_column="input",
+    target_column="input_ukr",
+    ouput_file_path="/Users/akravche/Projects/UCU/alignment/evaluation/datasets/ethics/ethics_commonsense_deepl_translated.csv",
 )

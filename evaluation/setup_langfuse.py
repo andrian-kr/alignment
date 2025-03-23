@@ -34,8 +34,7 @@ def create_dataset(
     print(f"Dataset {dataset_name} created.")
 
 
-def create_ethics_dataset(file_path: str = "data/ethics_commonsense.csv"):
-    dataset_name = os.path.basename(file_path).split(".")[0]
+def create_ethics_dataset(file_path: str = "data/ethics_commonsense.csv", dataset_name: str = "ethics_commonsense"):
     data = pd.read_csv(file_path)
 
     create_dataset(
@@ -67,9 +66,14 @@ def create_social_chem_dataset(
     )
 
 
-create_social_chem_dataset(
-    file_path="/Users/akravche/Projects/UCU/alignment/evaluation/datasets/social-chem-101/social-chem-101_care-harm_4_deepl_translated.csv",
-    dataset_name="sc_101_care_harm_deepl",
+# create_social_chem_dataset(
+#     file_path="/Users/akravche/Projects/UCU/alignment/evaluation/datasets/social-chem-101/social-chem-101_care-harm_4_deepl_translated.csv",
+#     dataset_name="sc_101_care_harm_deepl",
+# )
+
+create_ethics_dataset(
+    file_path="/Users/akravche/Projects/UCU/alignment/evaluation/datasets/ethics/ethics_commonsense_deepl_translated.csv",
+    dataset_name="ethics_commonsense_deepl",
 )
 
 

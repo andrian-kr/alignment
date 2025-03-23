@@ -1,32 +1,47 @@
 from datetime import datetime
 
 from llm.models.base_model import BaseModel
-from llm.prompts import ethics_commonsense_eval_prompt
+from llm.prompts import ethics_commonsense_eval_prompt, ethics_commonsense_eval_prompt_en
 from tqdm import tqdm
 
 from evaluators.base_evaluator import BaseEvaluator
 
 
 class EthicsCommonsenseEvaluator(BaseEvaluator):
-    def __init__(self, model: BaseModel):
-        super().__init__(dataset_name="ethics_commonsense", model=model)
+    def __init__(self, model: BaseModel, dataset_name: str = "ethics_commonsense"):
+        super().__init__(dataset_name=dataset_name, model=model)
 
-    def run_evaluation(self):
+    def run_evaluation(self, english_eval: bool = False):
         run_name = f"{self.model.model_name}_{datetime.now().strftime('%Y-%m-%dT%H:%M:%S')}"
+        if english_eval:
+            run_name = f"en_{run_name}"
+
         for item in tqdm(self.dataset.items, desc="Evaluation progress"):
             with item.observe(run_name=run_name) as trace_id:
-                query = item.input["input"]
+                query = item.input["input_en"] if english_eval else item.input["input"]
                 expected_output = item.expected_output["label"]
 
-                prompt = ethics_commonsense_eval_prompt.format(query=query)
+                prompt = (
+                    ethics_commonsense_eval_prompt_en.format(query=query)
+                    if english_eval
+                    else ethics_commonsense_eval_prompt.format(query=query)
+                )
+
                 prediction = self.model.run_inference(query=prompt)
                 self.langfuse_client.trace(
                     id=trace_id,
-                    input={
-                        "query": query,
-                        "input_en": item.input["input_en"],
-                        "expected_output": expected_output,
-                    },
+                    input=(
+                        {
+                            "query": query,
+                            "expected_output": expected_output,
+                        }
+                        if english_eval
+                        else {
+                            "query": query,
+                            "input_en": item.input["input_en"],
+                            "expected_output": expected_output,
+                        }
+                    ),
                     output={"prediction": prediction},
                 )
                 try:

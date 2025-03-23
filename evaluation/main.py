@@ -4,6 +4,7 @@ import torch
 from core.logger import general_logger
 from dotenv import load_dotenv
 from evaluators.sc_101_evaluator import SocialChem101Evaluator
+from evaluators.ethics_evaluator import EthicsCommonsenseEvaluator
 from llm.models.aya_expanse import AyaExpanse
 from llm.models.gemma import Gemma
 from llm.models.llama import Llama
@@ -18,7 +19,7 @@ model_classes = [AyaExpanse, Llama, Gemma, Qwen]
 for model_class in model_classes:
     model = model_class()
     general_logger.info(f"Running evaluation for model: {model.model_id}")
-    evaluator = SocialChem101Evaluator(dataset_name="sc_101_care_harm_deepl", model=model)
+    evaluator = EthicsCommonsenseEvaluator(dataset_name="ethics_commonsense_deepl", model=model)
     evaluator.run_evaluation()
 
     del evaluator
