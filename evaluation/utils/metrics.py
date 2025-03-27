@@ -15,6 +15,19 @@ def hard_accuracy(
     return correct / len(df)
 
 
+def hard_accuracy_for_label(
+    df: pd.DataFrame,
+    label: int = 0,
+    prediction_column: str = "prediction",
+    expected_output_column: str = "expected_output",
+):
+    """Calculates Hard Accuracy for a specific label."""
+    df["parsed_prediction"] = get_int_predictions(df, prediction_column)
+    df_subset = df[df[expected_output_column] == label]
+    correct = (df_subset["parsed_prediction"] == label).sum()
+    return correct / len(df_subset)
+
+
 def soft_accuracy(
     df: pd.DataFrame,
     prediction_column: str = "prediction",

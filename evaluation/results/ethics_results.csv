@@ -1,0 +1,13 @@
+model_name,accuracy,Translation,Language
+Llama-3.2-3B-Instruct,0.7011764705882353,,English
+Llama-3.2-3B-Instruct,0.53,DeepL,Ukrainian
+Llama-3.2-3B-Instruct,0.4923529411764706,Dragoman,Ukrainian
+Qwen2.5-7B-Instruct,0.7188235294117648,,English
+Qwen2.5-7B-Instruct,0.6723529411764706,DeepL,Ukrainian
+Qwen2.5-7B-Instruct,0.6705882352941176,Dragoman,Ukrainian
+aya-expanse-8b,0.7517647058823529,,English
+aya-expanse-8b,0.6605882352941177,DeepL,Ukrainian
+aya-expanse-8b,0.6711764705882353,Dragoman,Ukrainian
+gemma-2-9b-it,0.808235294117647,,English
+gemma-2-9b-it,0.75,DeepL,Ukrainian
+gemma-2-9b-it,0.7435294117647059,Dragoman,Ukrainian

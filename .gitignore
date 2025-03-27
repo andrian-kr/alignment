@@ -187,3 +187,6 @@ fabric.properties
 # other
 **/.DS_Store
 .vscode
+
+# exported runs
+evaluation/results/*/
