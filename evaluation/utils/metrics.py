@@ -1,9 +1,10 @@
 import pandas as pd
+from sklearn.metrics import f1_score
 
 
-def get_int_predictions(df: pd.DataFrame, prediction_column: str = "prediction"):
+def get_int_predictions(df: pd.DataFrame, prediction_column: str = "prediction", fill_na: int = -1):
     """Extracts the first character of the prediction column and converts it to an integer."""
-    return pd.to_numeric(df[prediction_column].astype(str).str[0], errors="coerce").fillna(-1).astype(int)
+    return pd.to_numeric(df[prediction_column].astype(str).str[0], errors="coerce").fillna(fill_na).astype(int)
 
 
 def hard_accuracy(
@@ -13,6 +14,17 @@ def hard_accuracy(
     df["parsed_prediction"] = get_int_predictions(df, prediction_column)
     correct = (df[expected_output_column] == df["parsed_prediction"]).sum()
     return correct / len(df)
+
+
+def f1(df: pd.DataFrame, prediction_column: str = "prediction", expected_output_column: str = "expected_output"):
+    """Calculates Hard Accuracy as the proportion of correct predictions."""
+    df["parsed_prediction"] = get_int_predictions(df, prediction_column)
+    return f1_score(
+        df[expected_output_column],
+        df["parsed_prediction"],
+        average="macro",
+        zero_division=0,
+    )
 
 
 def hard_accuracy_for_label(
