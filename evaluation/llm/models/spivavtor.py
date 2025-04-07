@@ -4,8 +4,8 @@ from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 from utils.common import get_device
 
 
-class Aya101(BaseModel):
-    def __init__(self, model_id: str = "CohereForAI/aya-101", **kwargs):
+class Spivavtor(BaseModel):
+    def __init__(self, model_id: str = "grammarly/spivavtor-xxl", **kwargs):
         super().__init__(model_id)
 
     def init_model(self, eval_mode: bool = True) -> tuple:
