@@ -106,6 +106,6 @@ def langfuse_dataset_to_csv(
 
 
 LANGFUSER_CLIENT = Langfuse()
-DATASET_NAME = "sc_101_care_harm_deepl"
+DATASET_NAME = "sc_101_care_harm_claude"
 DATASET_TYPE = DatasetType.SOCIAL_CHEMISTRY_101
 langfuse_dataset_to_csv(LANGFUSER_CLIENT, DATASET_NAME, DATASET_TYPE, os.getenv("RESULTS_DIR"))

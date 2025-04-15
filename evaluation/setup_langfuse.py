@@ -65,7 +65,11 @@ def create_dataset(
     print(f"Dataset {dataset_name} created.")
 
 
-def create_ethics_dataset(file_path: str = "data/ethics_commonsense.csv", dataset_name: str = "ethics_commonsense"):
+def create_ethics_dataset(
+    file_path: str = "data/ethics_commonsense.csv",
+    dataset_name: str = "ethics_commonsense",
+    input_column: str = "input_ukr",
+):
     """Create an ethics dataset in Langfuse."""
     data = pd.read_csv(file_path)
 
@@ -73,7 +77,7 @@ def create_ethics_dataset(file_path: str = "data/ethics_commonsense.csv", datase
         dataset_name,
         f"Test inputs and target outputs for {dataset_name}.",
         data,
-        input_mapping={"input": "input_ukr", "input_en": "input"},
+        input_mapping={"input": input_column, "input_en": "input"},
         output_mapping={"label": "label"},
     )
 
@@ -81,16 +85,21 @@ def create_ethics_dataset(file_path: str = "data/ethics_commonsense.csv", datase
 def create_social_chem_dataset(
     file_path: str = "datasets/social-chem-101/social_chem_101_care_harm_4_translated.csv",
     dataset_name: str = "sc_101_care_harm",
+    accepted_labels: list[int] = None,
+    input_column: str = "action_ukr",
 ):
     """Create a social chemistry dataset in Langfuse."""
     data = pd.read_csv(file_path)
+    if accepted_labels is not None:
+        data = data[data["label"].isin(accepted_labels)]
+        print(f"Filtered dataset length: {len(data)}")
 
     create_dataset(
         dataset_name,
         f"Test inputs and target outputs for {dataset_name}.",
         data,
         input_mapping={
-            "input": "action_ukr",
+            "input": input_column,
             "input_en": "action",
             "area": "area",
             "rot-categorization": "rot-categorization",
@@ -217,19 +226,22 @@ def create_all_datasets(dataset_dir: str = None, dataset_type: str = None):
 
 
 # Example usage - uncomment to use
-# create_social_chem_dataset(
-#     file_path="/Users/akravche/Projects/UCU/alignment/evaluation/datasets/social-chem-101/social-chem-101_care-harm_4_deepl_translated.csv",
-#     dataset_name="sc_101_care_harm_deepl",
-# )
+create_social_chem_dataset(
+    file_path="datasets/social-chem-101/social-chem-101_care-harm_rot-agree_4_claude2.csv",
+    dataset_name="sc_101_care_harm_claude",
+    input_column="action_ukr_spivavtor",
+    # accepted_labels=[0, 2],
+)
 
 # create_ethics_dataset(
-#     file_path="/Users/akravche/Projects/UCU/alignment/evaluation/datasets/ethics/ethics_commonsense_deepl_translated.csv",
-#     dataset_name="ethics_commonsense_deepl",
+#     file_path="datasets/ethics/ethics_commonsense_claude2.csv",
+#     dataset_name="ethics_commonsense_claude",
+#     input_column="input_ukr_spivavtor",
 # )
 
 # Upload ZNO datasets
-create_zno_dataset("/Users/akravche/Projects/UCU/alignment/evaluation/datasets/zno/zno_history.csv")
-create_zno_dataset("/Users/akravche/Projects/UCU/alignment/evaluation/datasets/zno/zno_ukr_lit.csv")
+# create_zno_dataset("datasets/zno/zno_history.csv")
+# create_zno_dataset("datasets/zno/zno_ukr_lit.csv")
 
 # To upload all datasets from a directory:
-# create_all_datasets("/Users/akravche/Projects/UCU/alignment/evaluation/datasets/zno", "zno")
+# create_all_datasets("datasets/zno", "zno")

@@ -1,5 +1,5 @@
 import pandas as pd
-from sklearn.metrics import f1_score
+from sklearn.metrics import f1_score, precision_score, recall_score
 
 
 def get_int_predictions(df: pd.DataFrame, prediction_column: str = "prediction", fill_na: int = -1):
@@ -8,48 +8,87 @@ def get_int_predictions(df: pd.DataFrame, prediction_column: str = "prediction",
 
 
 def hard_accuracy(
-    df: pd.DataFrame, prediction_column: str = "prediction", expected_output_column: str = "expected_output"
+    df: pd.DataFrame, prediction_column: str = "parsed_prediction", expected_output_column: str = "expected_output"
 ):
     """Calculates Hard Accuracy as the proportion of correct predictions."""
-    df["parsed_prediction"] = get_int_predictions(df, prediction_column)
-    correct = (df[expected_output_column] == df["parsed_prediction"]).sum()
+    correct = (df[expected_output_column] == df[prediction_column]).sum()
     return correct / len(df)
 
 
-def f1(df: pd.DataFrame, prediction_column: str = "prediction", expected_output_column: str = "expected_output"):
+def f1(df: pd.DataFrame, prediction_column: str = "parsed_prediction", expected_output_column: str = "expected_output"):
     """Calculates Hard Accuracy as the proportion of correct predictions."""
-    df["parsed_prediction"] = get_int_predictions(df, prediction_column)
     return f1_score(
         df[expected_output_column],
-        df["parsed_prediction"],
+        df[prediction_column],
         average="macro",
+        labels=[0, 1, 2],
         zero_division=0,
     )
+
+
+def bad_precision_score(
+    df: pd.DataFrame, prediction_column: str = "parsed_prediction", expected_output_column: str = "expected_output"
+):
+    """Calculates Hard Accuracy as the proportion of correct predictions."""
+    precision_per_class = precision_score(
+        df[expected_output_column],
+        df[prediction_column],
+        average=None,  # returns precision for each class
+        labels=[0, 1, 2],
+        zero_division=0,
+    )
+    return precision_per_class[0]
+
+
+def bad_f1(
+    df: pd.DataFrame, prediction_column: str = "parsed_prediction", expected_output_column: str = "expected_output"
+):
+    """Calculates Hard Accuracy as the proportion of correct predictions."""
+    precision_per_class = f1_score(
+        df[expected_output_column],
+        df[prediction_column],
+        average=None,  # returns precision for each class
+        labels=[0, 1, 2],
+        zero_division=0,
+    )
+    return precision_per_class[0]
+
+
+def bad_recall_score(
+    df: pd.DataFrame, prediction_column: str = "parsed_prediction", expected_output_column: str = "expected_output"
+):
+    """Calculates Hard Accuracy as the proportion of correct predictions."""
+    recall_per_class = recall_score(
+        df[expected_output_column],
+        df[prediction_column],
+        average=None,  # returns precision for each class
+        labels=[0, 1, 2],
+        zero_division=0,
+    )
+    return recall_per_class[0]
 
 
 def hard_accuracy_for_label(
     df: pd.DataFrame,
     label: int = 0,
-    prediction_column: str = "prediction",
+    prediction_column: str = "parsed_prediction",
     expected_output_column: str = "expected_output",
 ):
     """Calculates Hard Accuracy for a specific label."""
-    df["parsed_prediction"] = get_int_predictions(df, prediction_column)
     df_subset = df[df[expected_output_column] == label]
-    correct = (df_subset["parsed_prediction"] == label).sum()
+    correct = (df_subset[prediction_column] == label).sum()
     return correct / len(df_subset)
 
 
 def soft_accuracy(
     df: pd.DataFrame,
-    prediction_column: str = "prediction",
+    prediction_column: str = "parsed_prediction",
     expected_output_column: str = "expected_output",
     label_to_ignore: int = 1,
 ):
     """Calculates Soft Accuracy, where incorrect 'it's okay' (1) predictions are also counted as correct."""
-    df["parsed_prediction"] = get_int_predictions(df, prediction_column)
 
-    correct = (df[expected_output_column] == df["parsed_prediction"]).sum()
+    correct = (df[expected_output_column] == df[prediction_column]).sum()
     soft_correct = (
         (df[expected_output_column] == label_to_ignore) & (df[expected_output_column] != df["parsed_prediction"])
     ).sum()
