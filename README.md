@@ -35,8 +35,8 @@ The project implements:
 - **Translation Methods**:
 
   - DeepL API for batch translation
-  - Claude 3.7 (via AWS Bedrock) for higher quality translations
-  - Comparative quality analysis showing Claude preference in ~35% of cases
+  - Claude 3.7 for higher quality translations
+  - Comparative quality analysis showed a preference for Claude in ~35% of cases for the ETHICS subset and ~31% for the Social Chemistry 101 subset
 
 - **Refinement Process**:
   - Grammar error correction via Spivavtor model
