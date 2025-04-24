@@ -189,6 +189,6 @@ fabric.properties
 .vscode
 
 # exported runs
-evaluation/results/*/
+src/results/*/
 
 *.sh
