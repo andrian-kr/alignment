@@ -52,8 +52,9 @@ The project implements:
   - Label-specific accuracy (for targeted evaluation)
 
 - **Classification Metrics**:
+
   - Macro F1-score across all labels
-  - Bad precision/recall/F1 (specific to morally unacceptable content)
+  - Precision/recall/F1 (specific to morally unacceptable content)
   - Cross-lingual performance comparison
 
 ## 🚀 Getting Started
